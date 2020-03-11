@@ -1,0 +1,104 @@
+{
+    "name": "dn_bookmarks",
+    "version": "1.0.0-SNAPSHOT",
+    "title": "${bundleName}",
+    "description": "${bundleDescription}",
+    "vendor": "con terra GmbH",
+    "keywords": [
+        "map"
+    ],
+    "icon": {},
+    "license": {},
+    "productName": "devnet-mapapps-bookmarks",
+    "dependencies": {
+        "esri": "^4.7.0",
+        "apprt-vue": "^4.7.0",
+        "apprt-vuetify": "^4.7.0",
+        "map-widget": "^4.7.0"
+    },
+    "CSS-Themes-Extension": [
+        {
+            "name": "*",
+            "files": [
+                "./css/styles.css"
+            ]
+        }
+    ],
+    "layout-widgets": [
+        {
+            "widgetRole": "bookmarksWidget",
+            "window": {
+                "dockTool": "bookmarksToggleTool",
+                "title": "${tool.title}",
+                "autofocus": false,
+                "closeOnEscape": false,
+                "closable": true,
+                "maximizable": false,
+                "minimizeOnClose": true,
+                "resizable": true,
+                "marginBox": {
+                    "w": 400,
+                    "h": 400,
+                    "l": 25,
+                    "b": 58
+                },
+                "minSize": {
+                    "w": 300,
+                    "h": 300
+                }
+            }
+        },
+        {
+            "widgetRole": "bookmarksWidget",
+            "sublayout": [
+                "mobile_landscape",
+                "mobile_portrait"
+            ],
+            "window": {
+                "resizable": false,
+                "marginBox": {
+                    "w": "100%",
+                    "h": "50%",
+                    "b": 0
+                }
+            }
+        }
+    ],
+    "components": [
+        {
+            "name": "Config",
+            "impl": "./BookmarksWidgetFactory",
+            "instanceFactory": true,
+            "provides": [
+                "dijit.Widget"
+            ],
+            "properties": {
+                "widgetRole": "bookmarksWidget",
+                "localStorageKey": "conterra/dn_bookmarks",
+                "predefinedBookmarks": []
+            },
+            "references": [
+                {
+                    "name": "_mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel"
+                }
+            ]
+        },
+        {
+            "name": "BookmarksToggleTool",
+            "impl": "ct/tools/Tool",
+            "provides": [
+                "ct.tools.Tool"
+            ],
+            "propertiesConstructor": true,
+            "properties": {
+                "id": "bookmarksToggleTool",
+                "title": "${tool.title}",
+                "tooltip": "${tool.tooltip}",
+                "iconClass": "icon-map-bookmark",
+                "toolRole": "toolset",
+                "togglable": true
+            }
+        }
+    ]
+}
