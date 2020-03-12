@@ -26,7 +26,7 @@ export default BookmarksViewModel.createSubclass({
         this.localStorageKey = args.localStorageKey;
         this.predefinedBookmarks = args.predefinedBookmarks;
 
-        this.bookmarks.on("after-changes", (event) => {
+        this.bookmarks.on("after-changes", () => {
             while (this.bookmarksArray.length > 0) {
                 this.bookmarksArray.pop();
             }
@@ -62,7 +62,7 @@ export default BookmarksViewModel.createSubclass({
 
     removeAllBookmarks() {
         this.bookmarks.removeAll();
-        let predefinedBookmarks = this._getPredefinedBookmarks();
+        const predefinedBookmarks = this._getPredefinedBookmarks();
         this.bookmarks.push(...predefinedBookmarks);
         this.bookmarks.sort(this._compareBookmarks);
         this._storeBookmarksInLocalStorage();
@@ -70,18 +70,18 @@ export default BookmarksViewModel.createSubclass({
 
     _addBookmarks() {
         try {
-            let storedBookmarks = this._readBookmarksFromLocalStorage();
-            let predefinedBookmarks = this._getPredefinedBookmarks();
+            const storedBookmarks = this._readBookmarksFromLocalStorage();
+            const predefinedBookmarks = this._getPredefinedBookmarks();
             this.bookmarks.push(...storedBookmarks);
             this.bookmarks.push(...predefinedBookmarks);
             this.bookmarks.sort(this._compareBookmarks);
         } catch (exception) {
-            console.log(exception);
+            console.error(exception);
         }
     },
 
     _getPredefinedBookmarks() {
-        let predefinedBookmarks = this.predefinedBookmarks;
+        const predefinedBookmarks = this.predefinedBookmarks;
         return predefinedBookmarks.map((object) => new Bookmark(object))
             .map((bookmark) => {
                 bookmark.predefined = true;
@@ -91,19 +91,17 @@ export default BookmarksViewModel.createSubclass({
 
     _storeBookmarksInLocalStorage() {
         try {
-            let userDefinedBookmarks = this.bookmarks.filter((bookmark) => !bookmark.predefined);
-            let plainBookmarks = userDefinedBookmarks.map((bookmark) => {
-                return bookmark.toJSON();
-            });
-            let bookmarksString = JSON.stringify(plainBookmarks);
+            const userDefinedBookmarks = this.bookmarks.filter((bookmark) => !bookmark.predefined);
+            const plainBookmarks = userDefinedBookmarks.map((bookmark) => bookmark.toJSON());
+            const bookmarksString = JSON.stringify(plainBookmarks);
             this._localStorage.setItem(this.localStorageKey, bookmarksString);
         } catch (exception) {
-            console.log(exception);
+            console.error(exception);
         }
     },
 
     _readBookmarksFromLocalStorage() {
-        let bookmarksString = this._localStorage.getItem(this.localStorageKey);
+        const bookmarksString = this._localStorage.getItem(this.localStorageKey);
         if (bookmarksString !== null) {
             return JSON.parse(bookmarksString).map((object) => new Bookmark(object));
         } else {

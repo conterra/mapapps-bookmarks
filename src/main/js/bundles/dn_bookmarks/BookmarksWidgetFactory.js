@@ -25,8 +25,8 @@ export default class BookmarksWidgetFactory {
 
     createInstance() {
         const bookmarksModel = this._getBookmarksModel();
-        let vm = new Vue(BookmarksWidget);
-        let widget = VueDijit(vm, {class: "fullHeight"});
+        const vm = new Vue(BookmarksWidget);
+        const widget = VueDijit(vm, {class: "fullHeight"});
 
         vm.i18n = this._i18n.get().ui;
 
@@ -70,7 +70,7 @@ export default class BookmarksWidgetFactory {
 
     _getView() {
         const mapWidgetModel = this._mapWidgetModel;
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if (mapWidgetModel.view) {
                 resolve(mapWidgetModel.view);
             } else {
