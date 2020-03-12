@@ -36,9 +36,15 @@
                 <v-icon>edit</v-icon>
             </v-btn>
         </v-list-tile-action>
+        <v-list-tile-action v-if="!bookmark.predefined">
+            <v-btn
+                icon
+                @click.stop="emitRemoveBookmark()">
+                <v-icon>delete</v-icon>
+            </v-btn>
+        </v-list-tile-action>
     </v-list-tile>
 </template>
-
 <script>
     export default {
         props: {
@@ -79,6 +85,9 @@
             },
             emitEditBookmark() {
                 this.$emit('edit-bookmark', this.bookmark);
+            },
+            emitRemoveBookmark() {
+                this.$emit('remove-bookmark', this.bookmark);
             }
         }
     }

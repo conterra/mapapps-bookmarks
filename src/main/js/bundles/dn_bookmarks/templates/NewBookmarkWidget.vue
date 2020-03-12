@@ -72,7 +72,6 @@
         </v-layout>
     </v-container>
 </template>
-
 <script>
     export default {
         props: {

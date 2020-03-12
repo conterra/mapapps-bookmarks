@@ -39,8 +39,8 @@ export default class BookmarksWidgetFactory {
         vm.$on('goto-bookmark', (bookmark) => {
             bookmarksModel.goTo(bookmark);
         });
-        vm.$on('clear-bookmarks', () => {
-            bookmarksModel.clearBookmarks();
+        vm.$on('remove-all-bookmarks', () => {
+            bookmarksModel.removeAllBookmarks();
         });
         vm.$on('rename-bookmark', (bookmark, name) => {
             bookmarksModel.renameBookmark(bookmark, name);

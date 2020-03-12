@@ -22,24 +22,12 @@
         fill-height>
         <v-layout column>
             <v-flex style="overflow-y:auto;">
-                <div>{{ i18n.editBookmark }}</div>
                 <v-alert
                     :value="true"
-                    type="info"
+                    type="warning"
                 >
-                    {{ i18n.editBookmarkInfo }}
+                    {{ question }}
                 </v-alert>
-                <v-text-field
-                    v-model="bookmarkName"
-                    required
-                    autofocus
-                    clearable
-                    hide-details
-                    :rules="[rules.required]"
-                    :label="i18n.createBookmarkFieldLabel"
-                    @keyup.enter="saveBookmark()"
-                    @keyup.esc="cancel()">
-                </v-text-field>
             </v-flex>
             <v-flex shrink>
                 <v-layout
@@ -49,12 +37,12 @@
                         <v-btn
                             block
                             class="mb-0"
-                            @click="cancel()"
+                            @click="$emit('no')"
                             color="secondary">
                             <v-icon left>
                                 clear
                             </v-icon>
-                            {{ i18n.cancel }}
+                            {{ i18n.no }}
                         </v-btn>
                     </v-flex>
                     <v-flex class="pl-1">
@@ -62,12 +50,11 @@
                             block
                             class="mb-0"
                             color="primary"
-                            :disabled="!bookmarkNameIsValid"
-                            @click="saveBookmark()">
+                            @click="$emit('yes')">
                             <v-icon left>
-                                save
+                                done
                             </v-icon>
-                            {{ i18n.save }}
+                            {{ i18n.yes }}
                         </v-btn>
                     </v-flex>
                 </v-layout>
@@ -78,44 +65,13 @@
 <script>
     export default {
         props: {
-            bookmark: {
-                type: Object,
-                default: () => {
-                }
+            question: {
+                type: String,
+                default: () => ""
             },
             i18n: {
                 type: Object,
                 default: () => {
-                }
-            }
-        },
-        data: function () {
-            return {
-                bookmarkName: this.bookmark.name || "",
-                rules: {
-                    required: (value) => !!value || this.i18n.rules.required
-                }
-            }
-        },
-        computed: {
-            bookmarkNameIsValid() {
-                return this.bookmarkName !== null
-                    && this.bookmarkName !== undefined
-                    && this.bookmarkName.trim() !== "";
-            }
-        },
-        methods: {
-            cancel() {
-                this.$emit('cancel');
-                this.bookmarkName = null;
-                this.bookmark = null;
-            },
-            saveBookmark() {
-                if (this.bookmarkNameIsValid) { // validity check for enter key
-                    let name = this.bookmarkName;
-                    this.$emit('save-bookmark', this.bookmark, name);
-                    this.bookmarkName = null;
-                    this.bookmark = null;
                 }
             }
         }

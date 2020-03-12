@@ -27,9 +27,22 @@
         :bookmark="editBookmark"
         :i18n="i18n"
         @cancel="editBookmark=undefined"
-        @save-bookmark="emitSaveBookmark"
-        @remove-bookmark="emitRemoveBookmark">
+        @save-bookmark="emitSaveBookmark">
     </edit-bookmark-widget>
+    <question-widget
+        v-else-if="removeBookmark"
+        :question="i18n.removeBookmarkQuestion"
+        :i18n="i18n"
+        @no="removeBookmark=undefined"
+        @yes="emitRemoveBookmark">
+    </question-widget>
+    <question-widget
+        v-else-if="removeAllBookmarks"
+        :question="i18n.removeAllBookmarksQuestion"
+        :i18n="i18n"
+        @no="removeAllBookmarks=false"
+        @yes="emitRemoveAllBookmarks">
+    </question-widget>
     <v-container
         v-else
         class="pa-0"
@@ -45,14 +58,24 @@
                         :i18n="i18n"
                         :is-selected="bookmark === activeBookmark"
                         @goto-bookmark="emitGoToBookmark"
-                        @remove-bookmark="emitRemoveBookmark"
+                        @remove-bookmark="removeBookmark=bookmark"
                         @edit-bookmark="editBookmark=bookmark">
                     </bookmark-widget>
                 </v-list>
             </v-flex>
             <v-flex shrink>
                 <v-layout row>
-                    <v-flex class="pl-1">
+                    <v-flex class="pr-1" shrink>
+                        <v-btn
+                            class="my-0"
+                            color="error"
+                            block
+                            outline
+                            @click="removeAllBookmarks=true">
+                            <v-icon>delete</v-icon>
+                        </v-btn>
+                    </v-flex>
+                    <v-flex class="pl-1" grow>
                         <v-btn
                             class="my-0"
                             color="primary"
@@ -68,17 +91,18 @@
     </v-container>
 </template>
 <script>
-
     import Bindable from "apprt-vue/mixins/Bindable";
     import BookmarkWidget from "./BookmarkWidget.vue";
     import NewBookmarkWidget from "./NewBookmarkWidget.vue";
     import EditBookmarkWidget from "./EditBookmarkWidget.vue";
+    import QuestionWidget from "./QuestionWidget.vue";
 
     export default {
         components: {
             "bookmark-widget": BookmarkWidget,
             "new-bookmark-widget": NewBookmarkWidget,
-            "edit-bookmark-widget": EditBookmarkWidget
+            "edit-bookmark-widget": EditBookmarkWidget,
+            "question-widget": QuestionWidget
         },
         mixins: [Bindable],
         props: {
@@ -100,8 +124,9 @@
         data: function () {
             return {
                 showNewBookmarkWidget: false,
-                showClearDialog: false,
-                editBookmark: undefined
+                editBookmark: undefined,
+                removeBookmark: undefined,
+                removeAllBookmarks: false
             }
         },
         methods: {
@@ -109,13 +134,14 @@
                 this.showNewBookmarkWidget = false;
                 this.$emit('add-bookmark', name);
             },
-            emitRemoveBookmark(bookmark) {
+            emitRemoveBookmark() {
                 this.editBookmark = undefined;
-                this.$emit('remove-bookmark', bookmark);
+                this.$emit('remove-bookmark', this.removeBookmark);
+                this.removeBookmark = undefined;
             },
-            emitClearBookmarks() {
-                this.showClearDialog = false;
-                this.$emit('clear-bookmarks');
+            emitRemoveAllBookmarks() {
+                this.removeAllBookmarks = false;
+                this.$emit('remove-all-bookmarks');
             },
             emitGoToBookmark(bookmark) {
                 this.$emit('goto-bookmark', bookmark);

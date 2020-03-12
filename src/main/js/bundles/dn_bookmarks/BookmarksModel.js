@@ -60,7 +60,7 @@ export default BookmarksViewModel.createSubclass({
         this._storeBookmarksInLocalStorage();
     },
 
-    clearBookmarks() {
+    removeAllBookmarks() {
         this.bookmarks.removeAll();
         let predefinedBookmarks = this._getPredefinedBookmarks();
         this.bookmarks.push(...predefinedBookmarks);

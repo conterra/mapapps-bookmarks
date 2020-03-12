@@ -25,19 +25,20 @@ module.exports = {
             save: "Save",
             cancel: "Cancel",
             delete: "Delete",
-            deleteDialogMessage: "Do you really want to delete all spatial bookmarks?",
+            yes: "Yes",
+            no: "No",
+            removeAllBookmarksQuestion: "Do you really want to delete all spatial bookmarks?",
+            removeBookmarkQuestion: "Do you really want to delete this spatial bookmark?",
             createBookmarkFieldLabel: "Enter bookmark name",
             clearAllBookmarks: "Clear All Bookmarks",
             newBookmark: "Add new Bookmark",
             editBookmark: "Edit Bookmark",
             newBookmarkInfo: "After entering a name you can save the new bookmark. The current map section is used as the basis for the position.",
             editBookmarkInfo: "Here you can adjust the name of your spatial bookmark.",
-
             rules: {
                 required: "This value is required!"
             }
-        },
-
+        }
     },
     de: true
 };
