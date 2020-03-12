@@ -36,6 +36,7 @@
     "bundles": {
         "dn_bookmarks": {
             "Config": {
+                "showThumbnails": false,
                 "predefinedBookmarks": [
                     {
                         "extent": {

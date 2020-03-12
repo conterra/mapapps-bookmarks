@@ -75,6 +75,7 @@
             "properties": {
                 "widgetRole": "bookmarksWidget",
                 "localStorageKey": "conterra/dn_bookmarks",
+                "showThumbnails": true,
                 "predefinedBookmarks": []
             },
             "references": [

@@ -48,7 +48,7 @@ export default class BookmarksWidgetFactory {
 
         this[_binding] = Binding.for(vm, bookmarksModel)
             .syncToLeft("bookmarksArray", "bookmarks")
-            .syncAllToLeft("activeBookmark")
+            .syncAllToLeft("activeBookmark", "showThumbnails")
             .enable()
             .syncToLeftNow();
 

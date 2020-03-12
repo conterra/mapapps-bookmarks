@@ -20,12 +20,12 @@
         :class="{'bookmark': true, 'success': isActive}"
         @click="emitGoToBookmark()">
         <v-list-tile-action
-            v-if="bookmark.thumbnail && bookmark.thumbnail.url"
-            class="pr-2">
+            v-if="showThumbnails">
             <v-img :src="bookmark.thumbnail.url"></v-img>
         </v-list-tile-action>
         <v-list-tile-content>
-            <v-list-tile-title>
+            <v-list-tile-title
+                class="pl-2">
                 {{bookmark.name}}
             </v-list-tile-title>
         </v-list-tile-content>
@@ -61,6 +61,10 @@
             isSelected: {
                 type: Boolean,
                 default: false
+            },
+            showThumbnails: {
+                type: Boolean,
+                default: true
             }
         },
         data: function () {

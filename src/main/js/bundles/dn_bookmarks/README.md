@@ -20,6 +20,7 @@ To make the functions of this bundle available to the user, the following tool c
 #### Sample configuration
 ```json
 "Config": {
+    "showThumbnails": true,
     "predefinedBookmarks": [
         {
             "extent": {
@@ -87,4 +88,5 @@ To make the functions of this bundle available to the user, the following tool c
 
 | Property            | Type    | Possible Values               | Default       | Description                    |
 |---------------------|---------|-------------------------------|---------------|--------------------------------|
+| showThumbnails      | Boolean | ```true``` &#124; ```false``` | ```true```    | Show bookmark thumbnails       |
 | predefinedBookmarks | Object  |                               | ```[]```      | Array of predefined bookmarks. |

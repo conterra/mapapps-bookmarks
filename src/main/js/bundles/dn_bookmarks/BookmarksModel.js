@@ -25,6 +25,7 @@ export default BookmarksViewModel.createSubclass({
         this.bookmarksArray = [];
         this.localStorageKey = args.localStorageKey;
         this.predefinedBookmarks = args.predefinedBookmarks;
+        this.showThumbnails = args.showThumbnails;
 
         this.bookmarks.on("after-changes", () => {
             while (this.bookmarksArray.length > 0) {

@@ -55,6 +55,7 @@
                         v-for="(bookmark, index) in bookmarks"
                         :key="index"
                         :bookmark="bookmark"
+                        :show-thumbnails="showThumbnails"
                         :i18n="i18n"
                         :is-selected="bookmark === activeBookmark"
                         @goto-bookmark="emitGoToBookmark"
@@ -114,6 +115,10 @@
                 type: Object,
                 default: () => {
                 }
+            },
+            showThumbnails: {
+                type: Boolean,
+                default: true
             },
             i18n: {
                 type: Object,
