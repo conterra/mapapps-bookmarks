@@ -16,34 +16,37 @@
 
 -->
 <template>
-    <v-list-tile
-        :class="{'bookmark': true, 'success': isActive}"
-        @click="emitGoToBookmark()">
-        <v-list-tile-action
-            v-if="showThumbnails">
-            <v-img :src="bookmark.thumbnail.url"></v-img>
-        </v-list-tile-action>
-        <v-list-tile-content>
-            <v-list-tile-title
-                class="pl-2">
-                {{bookmark.name}}
-            </v-list-tile-title>
-        </v-list-tile-content>
-        <v-list-tile-action v-if="!bookmark.predefined">
-            <v-btn
-                icon
-                @click.stop="emitEditBookmark()">
-                <v-icon>edit</v-icon>
-            </v-btn>
-        </v-list-tile-action>
-        <v-list-tile-action v-if="!bookmark.predefined">
-            <v-btn
-                icon
-                @click.stop="emitRemoveBookmark()">
-                <v-icon>delete</v-icon>
-            </v-btn>
-        </v-list-tile-action>
-    </v-list-tile>
+    <div>
+        <v-list-tile
+            :class="{'bookmark': true, 'success': isActive}"
+            @click="emitGoToBookmark()">
+            <v-list-tile-action
+                v-if="showThumbnails">
+                <v-img :src="bookmark.thumbnail.url"></v-img>
+            </v-list-tile-action>
+            <v-list-tile-content>
+                <v-list-tile-title
+                    class="pl-2">
+                    {{bookmark.name}}
+                </v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action v-if="!bookmark.predefined">
+                <v-btn
+                    icon
+                    @click.stop="emitEditBookmark()">
+                    <v-icon>edit</v-icon>
+                </v-btn>
+            </v-list-tile-action>
+            <v-list-tile-action v-if="!bookmark.predefined">
+                <v-btn
+                    icon
+                    @click.stop="emitRemoveBookmark()">
+                    <v-icon>delete</v-icon>
+                </v-btn>
+            </v-list-tile-action>
+        </v-list-tile>
+        <v-divider v-if="!lastBookmark"></v-divider>
+    </div>
 </template>
 <script>
     export default {
@@ -57,6 +60,10 @@
                 type: Object,
                 default: () => {
                 }
+            },
+            lastBookmark: {
+                type: Boolean,
+                default: false
             },
             isSelected: {
                 type: Boolean,

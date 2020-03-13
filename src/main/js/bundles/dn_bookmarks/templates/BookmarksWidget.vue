@@ -58,6 +58,7 @@
                         :show-thumbnails="showThumbnails"
                         :i18n="i18n"
                         :is-selected="bookmark === activeBookmark"
+                        :last-bookmark="index === bookmarks.length-1"
                         @goto-bookmark="emitGoToBookmark"
                         @remove-bookmark="removeBookmark=bookmark"
                         @edit-bookmark="editBookmark=bookmark">
