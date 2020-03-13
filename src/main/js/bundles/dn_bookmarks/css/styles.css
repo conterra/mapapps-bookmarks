@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 .ctAppRoot .bookmarksWidget .bookmark .v-list__tile {
-    padding-left: 2px;
+    padding-left: 0;
 }
 
 .ctAppRoot .bookmarksWidget .bookmark .v-list__tile .v-image {
-    margin: 2px;
+    margin: 6px;
+    padding-bottom: 1px;
 }
 
 .ctAppRoot .bookmarksWidget .v-alert {
