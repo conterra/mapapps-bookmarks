@@ -15,7 +15,7 @@
  */
 module.exports = {
     root: {
-        bundleName: "Spatial Bookmarksn",
+        bundleName: "Spatial Bookmarks",
         bundleDescription: "The spatial bookmarks bundle allows to store the extent of the map as several bookmarks.",
         tool: {
             title: "Spatial Bookmarks",
