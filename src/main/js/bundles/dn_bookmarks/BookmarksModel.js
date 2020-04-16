@@ -111,16 +111,17 @@ export default BookmarksViewModel.createSubclass({
     },
 
     _compareBookmarks(a, b) {
-        if (a.predefined && !b.predefined)
+        if (a.predefined && !b.predefined) {
             return -1;
-        else if (b.predefined && !a.predefined)
+        } else if (b.predefined && !a.predefined) {
             return 1;
-        else if (a.name < b.name)
+        } else if (a.name < b.name) {
             return -1;
-        else if (a.name > b.name)
+        } else if (a.name > b.name) {
             return 1;
-        else
+        } else {
             return 0;
+        }
     }
 
 });
