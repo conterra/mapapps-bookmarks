@@ -2,7 +2,7 @@
 The bookmarks bundle allows to store the extent of the map as several bookmarks.
 
 ## Usage
-**Requirement: map.apps 4.7.0**
+**Requirement: map.apps 4.11.0**
 
 1. First you need to add the bundle dn_bookmarks to your app.
 2. Then you can configure it.
