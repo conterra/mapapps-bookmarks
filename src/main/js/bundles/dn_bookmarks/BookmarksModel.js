@@ -51,20 +51,20 @@ export default BookmarksViewModel.createSubclass({
         this.createBookmark().then((bookmark) => {
             bookmark.name = name || "Bookmark";
             this.bookmarks.add(bookmark);
-            this.bookmarks.sort(this._compareBookmarks);
+            this._sortBookmarks()
             this._storeBookmarksInLocalStorage();
         });
     },
 
     removeBookmark(bookmark) {
         this.bookmarks.remove(bookmark);
-        this.bookmarks.sort(this._compareBookmarks);
+        this._sortBookmarks()
         this._storeBookmarksInLocalStorage();
     },
 
     renameBookmark(bookmark, newName) {
         bookmark.name = newName;
-        this.bookmarks.sort(this._compareBookmarks);
+        this._sortBookmarks()
         this._storeBookmarksInLocalStorage();
     },
 
@@ -72,7 +72,7 @@ export default BookmarksViewModel.createSubclass({
         this.bookmarks.removeAll();
         const predefinedBookmarks = this._getPredefinedBookmarks();
         this.bookmarks.push(...predefinedBookmarks);
-        this.bookmarks.sort(this._compareBookmarks);
+        this._sortBookmarks()
         this._storeBookmarksInLocalStorage();
     },
 
@@ -82,7 +82,7 @@ export default BookmarksViewModel.createSubclass({
             const predefinedBookmarks = this._getPredefinedBookmarks();
             this.bookmarks.push(...storedBookmarks);
             this.bookmarks.push(...predefinedBookmarks);
-            this.bookmarks.sort(this._compareBookmarks);
+            this._sortBookmarks()
         } catch (exception) {
             console.error(exception);
         }
@@ -122,18 +122,20 @@ export default BookmarksViewModel.createSubclass({
         }
     },
 
-    _compareBookmarks(a, b) {
-        if (a.predefined && !b.predefined) {
-            return -1;
-        } else if (b.predefined && !a.predefined) {
-            return 1;
-        } else if (a.name < b.name) {
-            return -1;
-        } else if (a.name > b.name) {
-            return 1;
-        } else {
-            return 0;
-        }
+    _sortBookmarks() {
+        this.bookmarks.sort(function (a, b) {
+            if (a.predefined && !b.predefined) {
+                return -1;
+            } else if (b.predefined && !a.predefined) {
+                return 1;
+            } else if (a.name < b.name) {
+                return -1;
+            } else if (a.name > b.name) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
     }
 
 });
