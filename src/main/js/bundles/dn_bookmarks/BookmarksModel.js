@@ -27,6 +27,13 @@ export default BookmarksViewModel.createSubclass({
         this.predefinedBookmarks = args.predefinedBookmarks;
         this.showThumbnails = args.showThumbnails;
 
+        this.defaultCreateOptions = {
+            captureExtent: false,
+            captureViewpoint: true,
+            captureRotation: true,
+            captureScale: true
+        }
+
         this.bookmarks.on("after-changes", () => {
             while (this.bookmarksArray.length > 0) {
                 this.bookmarksArray.pop();
@@ -93,7 +100,12 @@ export default BookmarksViewModel.createSubclass({
     _storeBookmarksInLocalStorage() {
         try {
             const userDefinedBookmarks = this.bookmarks.filter((bookmark) => !bookmark.predefined);
-            const plainBookmarks = userDefinedBookmarks.map((bookmark) => bookmark.toJSON());
+            const plainBookmarks = userDefinedBookmarks.map((bookmark) => {
+                const object = bookmark.toJSON();
+                delete object.extent;
+                object.viewpoint.targetGeometry.type = "extent";
+                return object;
+            });
             const bookmarksString = JSON.stringify(plainBookmarks);
             this._localStorage.setItem(this.localStorageKey, bookmarksString);
         } catch (exception) {
