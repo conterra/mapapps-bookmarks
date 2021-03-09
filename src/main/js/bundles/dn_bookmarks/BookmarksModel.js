@@ -115,7 +115,9 @@ export default BookmarksViewModel.createSubclass({
             const plainBookmarks = userDefinedBookmarks.map((bookmark) => {
                 const object = bookmark.toJSON();
                 delete object.extent;
-                object.viewpoint.targetGeometry.type = "extent";
+                if (object.viewpoint?.targetGeometry) {
+                    object.viewpoint.targetGeometry.type = "extent";
+                }
                 return object;
             });
             const bookmarksString = JSON.stringify(plainBookmarks);
