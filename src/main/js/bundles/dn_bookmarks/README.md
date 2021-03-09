@@ -1,7 +1,9 @@
 # dn_bookmarks
+
 The bookmarks bundle allows to store the extent of the map as several bookmarks.
 
 ## Usage
+
 **Requirement: map.apps 4.11.0**
 
 1. First you need to add the bundle dn_bookmarks to your app.
@@ -18,19 +20,23 @@ To make the functions of this bundle available to the user, the following tool c
 ### Config
 
 #### Sample configuration
+
 ```json
 "Config": {
     "showThumbnails": true,
     "predefinedBookmarks": [
         {
-            "extent": {
-                "spatialReference": {
-                    "wkid": 3857
-                },
-                "xmin": 751350.015494031,
-                "ymin": 6594267.508847685,
-                "xmax": 798355.984505969,
-                "ymax": 6627086.491152315
+            "viewpoint": {
+                "targetGeometry": {
+                    "type": "extent",
+                    "spatialReference": {
+                        "wkid": 3857
+                    },
+                    "xmin": 751350.015494031,
+                    "ymin": 6594267.508847685,
+                    "xmax": 798355.984505969,
+                    "ymax": 6627086.491152315
+                }
             },
             "name": "Köln",
             "thumbnail": {
@@ -38,14 +44,17 @@ To make the functions of this bundle available to the user, the following tool c
             }
         },
         {
-            "extent": {
-                "spatialReference": {
-                    "wkid": 3857
-                },
-                "xmin": 671296.5794387474,
-                "ymin": 6577226.865797966,
-                "xmax": 682695.8977763348,
-                "ymax": 6585185.727931223
+            "viewpoint": {
+                "targetGeometry": {
+                    "type": "extent",
+                    "spatialReference": {
+                        "wkid": 3857
+                    },
+                    "xmin": 671296.5794387474,
+                    "ymin": 6577226.865797966,
+                    "xmax": 682695.8977763348,
+                    "ymax": 6585185.727931223
+                }
             },
             "name": "Aachen",
             "thumbnail": {
@@ -53,14 +62,17 @@ To make the functions of this bundle available to the user, the following tool c
             }
         },
         {
-            "extent": {
-                "spatialReference": {
-                    "wkid": 3857
-                },
-                "xmin": 1447011.71054118,
-                "ymin": 6864357.369422421,
-                "xmax": 1534969.4137633124,
-                "ymax": 6925768.342672862
+            "viewpoint": {
+                "targetGeometry": {
+                    "type": "extent",
+                    "spatialReference": {
+                        "wkid": 3857
+                    },
+                    "xmin": 1447011.71054118,
+                    "ymin": 6864357.369422421,
+                    "xmax": 1534969.4137633124,
+                    "ymax": 6925768.342672862
+                }
             },
             "name": "Berlin",
             "thumbnail": {
@@ -68,14 +80,17 @@ To make the functions of this bundle available to the user, the following tool c
             }
         },
         {
-            "extent": {
-                "spatialReference": {
-                    "wkid": 3857
-                },
-                "xmin": 1263327.719066777,
-                "ymin": 6110947.127522628,
-                "xmax": 1316220.4024749633,
-                "ymax": 6147876.140524718
+            "viewpoint": {
+                "targetGeometry": {
+                    "type": "extent",
+                    "spatialReference": {
+                        "wkid": 3857
+                    },
+                    "xmin": 1263327.719066777,
+                    "ymin": 6110947.127522628,
+                    "xmax": 1316220.4024749633,
+                    "ymax": 6147876.140524718
+                }
             },
             "name": "München",
             "thumbnail": {
