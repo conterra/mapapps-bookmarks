@@ -39,17 +39,14 @@
                 "showThumbnails": true,
                 "predefinedBookmarks": [
                     {
-                        "viewpoint": {
-                            "targetGeometry": {
-                                "type": "extent",
-                                "spatialReference": {
-                                    "wkid": 3857
-                                },
-                                "xmin": 751350.015494031,
-                                "ymin": 6594267.508847685,
-                                "xmax": 798355.984505969,
-                                "ymax": 6627086.491152315
-                            }
+                        "extent": {
+                            "spatialReference": {
+                                "wkid": 3857
+                            },
+                            "xmin": 751350.015494031,
+                            "ymin": 6594267.508847685,
+                            "xmax": 798355.984505969,
+                            "ymax": 6627086.491152315
                         },
                         "name": "Köln",
                         "thumbnail": {
@@ -57,17 +54,14 @@
                         }
                     },
                     {
-                        "viewpoint": {
-                            "targetGeometry": {
-                                "type": "extent",
-                                "spatialReference": {
-                                    "wkid": 3857
-                                },
-                                "xmin": 671296.5794387474,
-                                "ymin": 6577226.865797966,
-                                "xmax": 682695.8977763348,
-                                "ymax": 6585185.727931223
-                            }
+                        "extent": {
+                            "spatialReference": {
+                                "wkid": 3857
+                            },
+                            "xmin": 671296.5794387474,
+                            "ymin": 6577226.865797966,
+                            "xmax": 682695.8977763348,
+                            "ymax": 6585185.727931223
                         },
                         "name": "Aachen",
                         "thumbnail": {
@@ -75,17 +69,14 @@
                         }
                     },
                     {
-                        "viewpoint": {
-                            "targetGeometry": {
-                                "type": "extent",
-                                "spatialReference": {
-                                    "wkid": 3857
-                                },
-                                "xmin": 1447011.71054118,
-                                "ymin": 6864357.369422421,
-                                "xmax": 1534969.4137633124,
-                                "ymax": 6925768.342672862
-                            }
+                        "extent": {
+                            "spatialReference": {
+                                "wkid": 3857
+                            },
+                            "xmin": 1447011.71054118,
+                            "ymin": 6864357.369422421,
+                            "xmax": 1534969.4137633124,
+                            "ymax": 6925768.342672862
                         },
                         "name": "Berlin",
                         "thumbnail": {
@@ -93,17 +84,14 @@
                         }
                     },
                     {
-                        "viewpoint": {
-                            "targetGeometry": {
-                                "type": "extent",
-                                "spatialReference": {
-                                    "wkid": 3857
-                                },
-                                "xmin": 1263327.719066777,
-                                "ymin": 6110947.127522628,
-                                "xmax": 1316220.4024749633,
-                                "ymax": 6147876.140524718
-                                }
+                        "extent": {
+                            "spatialReference": {
+                                "wkid": 3857
+                            },
+                            "xmin": 1263327.719066777,
+                            "ymin": 6110947.127522628,
+                            "xmax": 1316220.4024749633,
+                            "ymax": 6147876.140524718
                         },
                         "name": "München",
                         "thumbnail": {
