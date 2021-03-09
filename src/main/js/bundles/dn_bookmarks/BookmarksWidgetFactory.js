@@ -34,16 +34,16 @@ export default class BookmarksWidgetFactory {
             bookmarksModel.addBookmark(name);
         });
         vm.$on('remove-bookmark', (bookmark) => {
-            bookmarksModel.removeBookmark(bookmark);
+            bookmarksModel.removeBookmark(bookmark.id);
         });
         vm.$on('goto-bookmark', (bookmark) => {
-            bookmarksModel.goTo(bookmark);
+            bookmarksModel.zoomToBookmark(bookmark.id);
         });
         vm.$on('remove-all-bookmarks', () => {
             bookmarksModel.removeAllBookmarks();
         });
         vm.$on('rename-bookmark', (bookmark, name) => {
-            bookmarksModel.renameBookmark(bookmark, name);
+            bookmarksModel.renameBookmark(bookmark.id, name);
         });
 
         this[_binding] = Binding.for(vm, bookmarksModel)

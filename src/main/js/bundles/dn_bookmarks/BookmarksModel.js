@@ -40,7 +40,12 @@ export default BookmarksViewModel.createSubclass({
             }
             const bookmarks = this.bookmarks.toArray();
             bookmarks.forEach((bookmark) => {
-                this.bookmarksArray.push(bookmark);
+                this.bookmarksArray.push({
+                    id: bookmark.uid,
+                    name: bookmark.name,
+                    thumbnail: bookmark.thumbnail,
+                    predefined: bookmark.predefined
+                });
             })
         });
 
@@ -56,13 +61,15 @@ export default BookmarksViewModel.createSubclass({
         });
     },
 
-    removeBookmark(bookmark) {
+    removeBookmark(id) {
+        const bookmark = this.bookmarks.find((b) => id === b.uid);
         this.bookmarks.remove(bookmark);
         this._sortBookmarks()
         this._storeBookmarksInLocalStorage();
     },
 
-    renameBookmark(bookmark, newName) {
+    renameBookmark(id, newName) {
+        const bookmark = this.bookmarks.find((b) => id === b.uid);
         bookmark.name = newName;
         this._sortBookmarks()
         this._storeBookmarksInLocalStorage();
@@ -74,6 +81,11 @@ export default BookmarksViewModel.createSubclass({
         this.bookmarks.push(...predefinedBookmarks);
         this._sortBookmarks()
         this._storeBookmarksInLocalStorage();
+    },
+
+    zoomToBookmark(id) {
+        const bookmark = this.bookmarks.find((b) => id === b.uid);
+        this.goTo(bookmark);
     },
 
     _addBookmarks() {
