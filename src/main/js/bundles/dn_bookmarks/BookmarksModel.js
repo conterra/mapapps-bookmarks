@@ -104,11 +104,7 @@ export default BookmarksViewModel.createSubclass({
     _readBookmarksFromLocalStorage() {
         const bookmarksString = this._localStorage.getItem(this.localStorageKey);
         if (bookmarksString !== null) {
-            return JSON.parse(bookmarksString).map((object) => {
-                delete object.extent
-                object.viewpoint.targetGeometry.type = "extent"
-                return new Bookmark(object)
-            });
+            return JSON.parse(bookmarksString).map((object) => new Bookmark(object));
         } else {
             return [];
         }
@@ -127,4 +123,5 @@ export default BookmarksViewModel.createSubclass({
             return 0;
         }
     }
+
 });
