@@ -12,6 +12,7 @@
     "productName": "devnet-mapapps-bookmarks",
     "dependencies": {
         "esri": "^4.18.0",
+        "esri-widgets": "^4.11.0",
         "apprt-vue": "^4.11.0",
         "apprt-vuetify": "^4.11.0",
         "map-widget": "^4.11.0"
