@@ -31,18 +31,26 @@
                 </v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action v-if="!bookmark.predefined">
-                <v-btn
-                    icon
-                    @click.stop="emitEditBookmark()">
-                    <v-icon>edit</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                    <v-btn
+                        slot="activator"
+                        icon
+                        @click.stop="emitEditBookmark()">
+                        <v-icon>edit</v-icon>
+                    </v-btn>
+                    <span>{{ i18n.editBookmark }}</span>
+                </v-tooltip>
             </v-list-tile-action>
             <v-list-tile-action v-if="!bookmark.predefined">
-                <v-btn
-                    icon
-                    @click.stop="emitRemoveBookmark()">
-                    <v-icon>delete</v-icon>
-                </v-btn>
+                <v-tooltip bottom>
+                    <v-btn
+                        slot="activator"
+                        icon
+                        @click.stop="emitRemoveBookmark()">
+                        <v-icon>delete</v-icon>
+                    </v-btn>
+                    <span>{{ i18n.deleteBookmark }}</span>
+                </v-tooltip>
             </v-list-tile-action>
         </v-list-tile>
         <v-divider v-if="!lastBookmark"></v-divider>

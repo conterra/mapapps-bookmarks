@@ -32,6 +32,7 @@ module.exports = {
         clearAllBookmarks: "Alle Lesezeichen l\u00f6schen",
         newBookmark: "Neues Lesezeichen hinzuf\u00fcgen",
         editBookmark: "Lesezeichen editieren",
+        deleteBookmark: "Lesezeichen löschen",
         newBookmarkInfo: "Nach der Eingabe eines Namens k\u00f6nnen Sie das neue Bookmark speichern. Dabei wird der aktuelle Kartenausschnitt als Grundlage f\u00fcr die Position verwendet.",
         editBookmarkInfo: "Hier k\u00f6nnen Sie den Namen Ihres r\u00e4umlichen Lesezeichens anpassen.",
         rules: {

@@ -33,6 +33,7 @@ module.exports = {
             clearAllBookmarks: "Clear All Bookmarks",
             newBookmark: "Add new Bookmark",
             editBookmark: "Edit Bookmark",
+            deleteBookmark: "Delete Bookmark",
             newBookmarkInfo: "After entering a name you can save the new bookmark. The current map section is used as the basis for the position.",
             editBookmarkInfo: "Here you can adjust the name of your spatial bookmark.",
             rules: {
