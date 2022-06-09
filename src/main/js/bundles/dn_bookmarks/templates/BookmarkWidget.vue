@@ -19,7 +19,8 @@
     <div>
         <v-list-tile
             :class="{'bookmark': true, 'success': isActive}"
-            @click="emitGoToBookmark()">
+            @click="emitGoToBookmark()"
+            href="#">
             <v-list-tile-action
                 v-if="showThumbnails">
                 <v-img :src="bookmark.thumbnail.url"></v-img>
