@@ -25,3 +25,33 @@
 .ctAppRoot .bookmarksWidget .v-alert {
     border: none;
 }
+
+/* everlasting */
+.ctAppRoot.everlasting a:focus-visible.v-list__tile {
+    background-color: #12a5f4;
+    color: #fff
+}
+
+/* autumn  */
+.ctAppRoot.autumn a:focus-visible.v-list__tile {
+    background-color: #2980b9;
+    color: #fff
+}
+
+/* summer  */
+.ctAppRoot.summer a:focus-visible.v-list__tile {
+    background-color: #8c0f1a;
+    color: #fff;
+}
+
+/* spring  */
+.ctAppRoot.spring a:focus-visible.v-list__tile {
+    background-color: #16a085;
+    color: #fff;
+}
+
+/* winter */
+.ctAppRoot.winter a:focus-visible.v-list__tile {
+    background-color: #3c3c3c;
+    color: #fff;
+}
