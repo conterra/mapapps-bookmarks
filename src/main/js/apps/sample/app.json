@@ -14,7 +14,12 @@
             "splashscreen",
             "templatelayout",
             "template-seasons",
+            "themes",
+            "theme-autumn",
             "theme-everlasting",
+            "theme-spring",
+            "theme-summer",
+            "theme-winter",
             "map-init",
             "map-preload-2D",
             "toolset",
@@ -34,6 +39,14 @@
         ]
     },
     "bundles": {
+        "themes": {
+            "ThemeModel": {
+                "_selectedTheme": "everlasting"
+            },
+            "ThemeSelector": {
+                "componentEnabled": true
+            }
+        },
         "dn_bookmarks": {
             "Config": {
                 "showThumbnails": true,
