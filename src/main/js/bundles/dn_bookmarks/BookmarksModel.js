@@ -54,7 +54,7 @@ export default BookmarksViewModel.createSubclass({
 
     addBookmark(name) {
         this.createBookmark().then((bookmark) => {
-            bookmark.name = name || "Bookmark";
+            bookmark.name = this._checkBookmarkNameForUniqueness(name) || "Bookmark";
             this.bookmarks.add(bookmark);
             this._sortBookmarks()
             this._storeBookmarksInLocalStorage();
@@ -150,6 +150,23 @@ export default BookmarksViewModel.createSubclass({
                 return 0;
             }
         });
+    },
+
+    _checkBookmarkNameForUniqueness(name) {
+        const existingBookmarks = this.bookmarksArray;
+
+        let matchCounter = 0;
+        existingBookmarks.forEach(bookmark => {
+            if (bookmark.name === name || bookmark.name.split("_")[0] === name.split("_")[0]) {
+                matchCounter++;
+            }
+        });
+
+        if (matchCounter > 0) {
+            return name + "_" + matchCounter;
+        } else {
+            return name;
+        }
     }
 
 });
