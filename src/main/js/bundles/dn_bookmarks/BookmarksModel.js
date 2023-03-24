@@ -32,7 +32,7 @@ export default BookmarksViewModel.createSubclass({
             captureViewpoint: true,
             captureRotation: true,
             captureScale: true
-        }
+        };
 
         this.bookmarks.on("after-changes", () => {
             while (this.bookmarksArray.length > 0) {
@@ -46,32 +46,43 @@ export default BookmarksViewModel.createSubclass({
                     thumbnail: bookmark.thumbnail,
                     predefined: bookmark.predefined
                 });
-            })
+            });
+
+            this.deleteAllAvailable = this._checkDeleteAvailable();
         });
 
         this._addBookmarks();
+    },
+
+    // define custom properties added to enable watching/binding them
+    properties: {
+        activeBookmark: {},
+        showThumbnails: {},
+        deleteAllAvailable: {}
     },
 
     addBookmark(name) {
         this.createBookmark().then((bookmark) => {
             bookmark.name = this._checkBookmarkNameForUniqueness(name) || "Bookmark";
             this.bookmarks.add(bookmark);
-            this._sortBookmarks()
+            this._sortBookmarks();
             this._storeBookmarksInLocalStorage();
+            this.deleteAllAvailable = this._checkDeleteAvailable();
         });
     },
 
     removeBookmark(id) {
         const bookmark = this.bookmarks.find((b) => id === b.uid);
         this.bookmarks.remove(bookmark);
-        this._sortBookmarks()
+        this._sortBookmarks();
         this._storeBookmarksInLocalStorage();
+        this.deleteAllAvailable = this._checkDeleteAvailable();
     },
 
     renameBookmark(id, newName) {
         const bookmark = this.bookmarks.find((b) => id === b.uid);
         bookmark.name = newName;
-        this._sortBookmarks()
+        this._sortBookmarks();
         this._storeBookmarksInLocalStorage();
     },
 
@@ -79,8 +90,9 @@ export default BookmarksViewModel.createSubclass({
         this.bookmarks.removeAll();
         const predefinedBookmarks = this._getPredefinedBookmarks();
         this.bookmarks.push(...predefinedBookmarks);
-        this._sortBookmarks()
+        this._sortBookmarks();
         this._storeBookmarksInLocalStorage();
+        this.deleteAllAvailable = this._checkDeleteAvailable();
     },
 
     zoomToBookmark(id) {
@@ -94,7 +106,7 @@ export default BookmarksViewModel.createSubclass({
             const predefinedBookmarks = this._getPredefinedBookmarks();
             this.bookmarks.push(...storedBookmarks);
             this.bookmarks.push(...predefinedBookmarks);
-            this._sortBookmarks()
+            this._sortBookmarks();
         } catch (exception) {
             console.error(exception);
         }
@@ -167,6 +179,10 @@ export default BookmarksViewModel.createSubclass({
         } else {
             return name;
         }
+    },
+
+    _checkDeleteAvailable() {
+        return (this.bookmarksArray.length > this.predefinedBookmarks.length);
     }
 
 });
