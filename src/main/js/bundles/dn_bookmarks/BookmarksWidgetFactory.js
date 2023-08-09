@@ -16,7 +16,7 @@
 import Vue from "apprt-vue/Vue";
 import VueDijit from "apprt-vue/VueDijit";
 import BookmarksWidget from "./templates/BookmarksWidget.vue";
-import Binding from "apprt-binding/Binding"
+import Binding from "apprt-binding/Binding";
 import BookmarksModel from "./BookmarksModel";
 
 const _binding = Symbol("_binding");
@@ -48,7 +48,7 @@ export default class BookmarksWidgetFactory {
 
         this[_binding] = Binding.for(vm, bookmarksModel)
             .syncToLeft("bookmarksArray", "bookmarks")
-            .syncAllToLeft("activeBookmark", "showThumbnails")
+            .syncAllToLeft("activeBookmark", "showThumbnails", "deleteAllAvailable")
             .enable()
             .syncToLeftNow();
 
