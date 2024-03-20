@@ -11,7 +11,7 @@ https://demos.conterra.de/mapapps/resources/apps/downloads_bookmarks/index.html
 ## Installation Guide
 **Requirement: map.apps 4.7.0**
 
-[dn_bookmarks Documentation](https://github.com/conterra/mapapps-bookmarks/tree/master/src/main/js/bundles/dn_bookmarks)
+[dn_bookmarks Documentation](https://github.com/conterra/mapapps-bookmarks/tree/main/src/main/js/bundles/dn_bookmarks)
 
 ## Development Guide
 ### Define the mapapps remote base
