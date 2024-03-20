@@ -19,16 +19,17 @@
     <div>
         <v-list-tile
             :class="{'bookmark': true, 'success': isActive}"
+            href="#"
             @click="emitGoToBookmark()"
-            href="#">
-            <v-list-tile-action
-                v-if="showThumbnails">
-                <v-img :src="bookmark.thumbnail.url"></v-img>
+        >
+            <v-list-tile-action v-if="showThumbnails">
+                <v-img :src="bookmark.thumbnail.url" />
             </v-list-tile-action>
             <v-list-tile-content>
                 <v-list-tile-title
-                    class="pl-2">
-                    {{bookmark.name}}
+                    class="pl-2"
+                >
+                    {{ bookmark.name }}
                 </v-list-tile-title>
             </v-list-tile-content>
             <v-list-tile-action v-if="!bookmark.predefined">
@@ -36,7 +37,8 @@
                     <v-btn
                         slot="activator"
                         icon
-                        @click.stop="emitEditBookmark()">
+                        @click.stop="emitEditBookmark()"
+                    >
                         <v-icon>edit</v-icon>
                     </v-btn>
                     <span>{{ i18n.editBookmark }}</span>
@@ -47,14 +49,15 @@
                     <v-btn
                         slot="activator"
                         icon
-                        @click.stop="emitRemoveBookmark()">
+                        @click.stop="emitRemoveBookmark()"
+                    >
                         <v-icon>delete</v-icon>
                     </v-btn>
                     <span>{{ i18n.deleteBookmark }}</span>
                 </v-tooltip>
             </v-list-tile-action>
         </v-list-tile>
-        <v-divider v-if="!lastBookmark"></v-divider>
+        <v-divider v-if="!lastBookmark" />
     </div>
 </template>
 <script>
@@ -86,7 +89,7 @@
         data: function () {
             return {
                 isActive: false
-            }
+            };
         },
         watch: {
             isSelected(value) {
@@ -110,5 +113,5 @@
                 this.$emit('remove-bookmark', this.bookmark);
             }
         }
-    }
+    };
 </script>

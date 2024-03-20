@@ -19,7 +19,8 @@
     <v-container
         class="pa-0"
         fluid
-        fill-height>
+        fill-height
+    >
         <v-layout column>
             <v-flex style="overflow-y:auto;">
                 <v-alert
@@ -32,13 +33,15 @@
             <v-flex shrink>
                 <v-layout
                     row
-                    wrap>
+                    wrap
+                >
                     <v-flex class="pr-1">
                         <v-btn
                             block
                             class="mb-0"
+                            color="secondary"
                             @click="$emit('no')"
-                            color="secondary">
+                        >
                             <v-icon left>
                                 clear
                             </v-icon>
@@ -50,7 +53,8 @@
                             block
                             class="mb-0"
                             color="primary"
-                            @click="$emit('yes')">
+                            @click="$emit('yes')"
+                        >
                             <v-icon left>
                                 done
                             </v-icon>
@@ -75,5 +79,5 @@
                 }
             }
         }
-    }
+    };
 </script>

@@ -19,7 +19,8 @@
     <v-container
         class="pa-0"
         fluid
-        fill-height>
+        fill-height
+    >
         <v-layout column>
             <v-flex style="overflow-y:auto;">
                 <div>{{ i18n.editBookmark }}</div>
@@ -38,19 +39,21 @@
                     :rules="[rules.required]"
                     :label="i18n.createBookmarkFieldLabel"
                     @keyup.enter="saveBookmark()"
-                    @keyup.esc="cancel()">
-                </v-text-field>
+                    @keyup.esc="cancel()"
+                />
             </v-flex>
             <v-flex shrink>
                 <v-layout
                     row
-                    wrap>
+                    wrap
+                >
                     <v-flex class="pr-1">
                         <v-btn
                             block
                             class="mb-0"
+                            color="secondary"
                             @click="cancel()"
-                            color="secondary">
+                        >
                             <v-icon left>
                                 clear
                             </v-icon>
@@ -63,7 +66,8 @@
                             class="mb-0"
                             color="primary"
                             :disabled="!bookmarkNameIsValid"
-                            @click="saveBookmark()">
+                            @click="saveBookmark()"
+                        >
                             <v-icon left>
                                 save
                             </v-icon>
@@ -95,7 +99,7 @@
                 rules: {
                     required: (value) => !!value || this.i18n.rules.required
                 }
-            }
+            };
         },
         computed: {
             bookmarkNameIsValid() {
@@ -112,12 +116,12 @@
             },
             saveBookmark() {
                 if (this.bookmarkNameIsValid) { // validity check for enter key
-                    let name = this.bookmarkName;
+                    const name = this.bookmarkName;
                     this.$emit('save-bookmark', this.bookmark, name);
                     this.bookmarkName = null;
                     this.bookmark = null;
                 }
             }
         }
-    }
+    };
 </script>
