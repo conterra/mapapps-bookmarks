@@ -31,9 +31,6 @@
             "locateme",
             "dn_bookmarks"
         ],
-        "require": [
-            "${app}.app"
-        ],
         "i18n": [
             "bundle"
         ]
