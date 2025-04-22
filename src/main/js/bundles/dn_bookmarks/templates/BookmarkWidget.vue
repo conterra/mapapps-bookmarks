@@ -37,6 +37,7 @@
                     <v-btn
                         slot="activator"
                         icon
+                        :aria-label="i18n.editBookmark"
                         @click.stop="emitEditBookmark()"
                     >
                         <v-icon>edit</v-icon>
@@ -49,6 +50,7 @@
                     <v-btn
                         slot="activator"
                         icon
+                        :aria-label="i18n.deleteBookmark"
                         @click.stop="emitRemoveBookmark()"
                     >
                         <v-icon>delete</v-icon>
