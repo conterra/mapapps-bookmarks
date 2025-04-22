@@ -20,6 +20,8 @@
         <v-list-tile
             :class="{'bookmark': true, 'success': isActive}"
             href="#"
+            role="listitem"
+            :aria-label="bookmark.name"
             @click="emitGoToBookmark()"
         >
             <v-list-tile-action v-if="showThumbnails">

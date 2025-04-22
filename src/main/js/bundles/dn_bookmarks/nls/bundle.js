@@ -22,6 +22,7 @@ module.exports = {
             tooltip: "Spatial Bookmarks"
         },
         ui: {
+            listOfBookmarks: "List of available spatial bookmarks",
             save: "Save",
             cancel: "Cancel",
             delete: "Delete",

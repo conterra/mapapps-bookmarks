@@ -21,6 +21,7 @@ module.exports = {
         tooltip: "R\u00e4umliche Lesezeichen"
     },
     ui: {
+        listOfBookmarks: "Liste der verfügbaren räumlichen Lesezeichen",
         save: "Speichern",
         cancel: "Abbrechen",
         delete: "L\u00f6schen",

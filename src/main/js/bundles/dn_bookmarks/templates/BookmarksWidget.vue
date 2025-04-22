@@ -51,7 +51,10 @@
     >
         <v-layout column>
             <v-flex style="overflow-y:auto;">
-                <v-list class="pa-0">
+                <v-list
+                    class="pa-0"
+                    :aria-label="i18n.listOfBookmarks"
+                >
                     <bookmark-widget
                         v-for="(bookmark, index) in bookmarks"
                         :key="index"
