@@ -20,6 +20,8 @@
         <v-list-tile
             :class="{'bookmark': true, 'success': isActive}"
             href="#"
+            role="listitem"
+            :aria-label="bookmark.name"
             @click="emitGoToBookmark()"
         >
             <v-list-tile-action v-if="showThumbnails">
@@ -37,6 +39,7 @@
                     <v-btn
                         slot="activator"
                         icon
+                        :aria-label="i18n.editBookmark"
                         @click.stop="emitEditBookmark()"
                     >
                         <v-icon>edit</v-icon>
@@ -49,6 +52,7 @@
                     <v-btn
                         slot="activator"
                         icon
+                        :aria-label="i18n.deleteBookmark"
                         @click.stop="emitRemoveBookmark()"
                     >
                         <v-icon>delete</v-icon>
