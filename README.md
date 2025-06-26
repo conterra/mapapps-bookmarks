@@ -3,7 +3,7 @@
 # Bookmarks Bundle
 The bookmarks bundle allows to store the extent of the map as several bookmarks.
 
-![Screenshot App](https://github.com/conterra/mapapps-bookmarks/blob/main/screenshot.JPG)
+![Screenshot App](https://github.com/conterra/mapapps-bookmarks/blob/main/screenshot.png)
 
 ## Sample App
 https://demos.conterra.de/mapapps/resources/apps/downloads_bookmarks/index.html
