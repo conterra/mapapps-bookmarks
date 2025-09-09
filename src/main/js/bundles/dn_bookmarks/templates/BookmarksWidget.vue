@@ -123,10 +123,6 @@
         },
         mixins: [Bindable],
         props: {
-            bookmarks: {
-                type: Array,
-                default: () => []
-            },
             activeBookmark: {
                 type: Object,
                 default: () => {
@@ -148,6 +144,7 @@
         },
         data: function () {
             return {
+                bookmarks: [],
                 showNewBookmarkWidget: false,
                 editBookmark: undefined,
                 removeBookmark: undefined,
