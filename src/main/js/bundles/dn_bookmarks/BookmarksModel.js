@@ -16,6 +16,8 @@
 import Bookmark from "esri/webmap/Bookmark";
 import BookmarksViewModel from "esri/widgets/Bookmarks/BookmarksViewModel";
 import Collection from "esri/core/Collection";
+import reactiveUtils from "esri/core/reactiveUtils";
+
 
 export default BookmarksViewModel.createSubclass({
     _localStorage: window.localStorage,
@@ -54,7 +56,7 @@ export default BookmarksViewModel.createSubclass({
         this._addBookmarks();
     },
 
-    // define custom properties added to enable watching/binding them
+
     properties: {
         activeBookmark: {},
         showThumbnails: {},
@@ -62,14 +64,236 @@ export default BookmarksViewModel.createSubclass({
     },
 
     addBookmark(name) {
-        this.createBookmark().then((bookmark) => {
-            bookmark.name = this._checkBookmarkNameForUniqueness(name) || "Bookmark";
+        if (!name || typeof name !== "string") {
+            console.warn("Bookmark name is not valid");
+            return;
+        }
+
+        const view = this.view;
+        if (!view) {
+            console.warn("No view available to create bookmark");
+            return;
+        }
+
+
+        const uniqueName = this._checkBookmarkNameForUniqueness(name);
+        if (!uniqueName) {
+            console.warn("Konnte keinen eindeutigen Namen erstellen");
+            return;
+        }
+
+
+
+
+        reactiveUtils.whenOnce(() => view.ready)
+            .then(() => {
+
+                setTimeout(() => {
+                    try {
+
+                        if (view.type === "3d") {
+
+                            this._create3DBookmarkWithScreenshot(uniqueName);
+                        } else {
+
+                            this._create2DBookmark(uniqueName);
+                        }
+                    } catch (error) {
+                        console.error("Fehler beim Erstellen des Lesezeichens:", error);
+
+                        this._createFallbackBookmark(uniqueName);
+                    }
+                }, 200);
+            })
+            .catch(error => {
+                console.error("Fehler beim Warten auf View-Bereitschaft:", error);
+
+                this._createFallbackBookmark(uniqueName);
+            });
+    },
+
+    // Neue Methode für 2D-Bookmarks
+    _create2DBookmark(name) {
+        try {
+            const view = this.view;
+            if (!view) return;
+
+            const viewpoint = {
+                targetGeometry: view.extent,
+                scale: view.scale,
+                rotation: view.rotation || 0
+            };
+
+            view.takeScreenshot({
+                width: 150,
+                height: 100,
+                format: "png"
+            }).then(screenshot => {
+
+                const bookmark = new Bookmark({
+                    name: name,
+                    viewpoint: viewpoint,
+                    thumbnail: {
+                        url: screenshot.dataUrl
+                    }
+                });
+
+
+                bookmark.uid = Date.now().toString();
+
+                this.bookmarks.add(bookmark);
+                this._sortBookmarks();
+                this._storeBookmarksInLocalStorage();
+                this.deleteAllAvailable = this._checkDeleteAvailable();
+
+
+            }).catch(error => {
+                console.error("Fehler beim Erstellen des Screenshots:", error);
+                this._createBookmarkWithoutScreenshot(name, viewpoint);
+            });
+        } catch (error) {
+            console.error("Fehler beim Erstellen des 2D-Bookmarks:", error);
+            this._createFallbackBookmark(name);
+        }
+    },
+
+
+    _createBookmarkWithoutScreenshot(name, viewpoint) {
+        try {
+
+            const bookmark = new Bookmark({
+                name: name,
+                viewpoint: viewpoint,
+                thumbnail: {
+                    url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAMAAAAL34HQAAAASFBMVEUAAAD///8JCQlFRUXs7OzBwcEuLi6enp739/eJiYlhYWHV1dW0tLR4eHhOTk7i4uI3NzfIyMioqKgaGhrY2NiSkpJycnJoaGg/C6MaAAAELklEQVR4nO1c65qjIAx1uKiIl9bL+7/pIqi1tTPDbKsS9vD92M+dbZwDIQm5BAEHBwcHBwcHBwcHBwcHBwdnCP94MX8GIiYAlAQksIeUCxghIv5R4PgCPA0JevqdHeY+YDeGEOvwKztSoVAFp8oaUBN0zqNUNXAYeDaAz1mO+ZrnnABoRCAEaz+Zr4P9X0hwjoZncKavxJUGRHhGXCMUTCgFCP/FhQiuZbUAMQCj77kyE1ob8GOzyoIvFxHZhkeC+4zSrzZWr9C8Z+JwmfnUaMjXJK+4xBFddksA8Xoq/ThxZI4sARHDrxzD33mkMdJwPQ3VbtXE+9MQrWodrFyE1gU7LHQcOTiUAshgTsTm5+LqiEjGg+OVsZYnMlXGKnUiJfVcRMWXO1gB9lgoGG2Igno3DMdazg4XogJU5a6Z+brScY20mJICJsZCb+NiQwvCCkayoxWYcjFSWnNRUqENoKPgFkRsikVofZxVqZtRcRGhe8wpVKymdQItShiRSmQmWOgCRmm2hDHlA6ZUqeP0DxiE4L6rPWCKpUFVOCJ0vI3FJQzKOg1jnSI11/Qxl5IMLpByc42DsUGGlpVg+4kArFP7j9AaWi+7T5GEuElcuD68xrAwW33XwLlSMnLtBZvQCq39qweCPxaUYWVZVs0lzLcf9TzP3YR++sw3omWLa0FKAvuvxZVlKWwlV5R/o5nQm9COBIM/T4ZoEsIvWJBUTpHgLHW5+zJJ3i+GJSlrBtvwCv+T1+k1pUzSpMfASdxsscFmA9dpO6lzL4zDiukQWUlVPEZkWBWuuvqwTRYvFzPcmgydAbXwqt5Cq5u6b0g7caVivN+AbdUqRbVgm6NBZTZvVY0G5PLf0gb9cCkUDh2qhIt1URi25us11O1oao626DI042J2t4tlGH+Lxc4YbXB7LBYqvAla36yLfU/EOfCUL+yM70Z9E3dfyzQ4yBJj4ZdHaq7+rtGqqGX5b2nmiTyxh3e93HtV5c1YX1WG8c9+srn6yL7SaSy0zzRfbWqf7bxq1XfaF7v2xqZa+mS2+rHNN3tqEbt11f8uoP0c1OOeBLRDXmEtTl1yXR0xB7zCWpy8pGhj6UZ8rQObscS9IIwZ0c0MPI5bbCl2wZiisR0aE1vcY5f68jlshxMBlm/apCnkbUFYDvqB/8VmX0EY+QmeDQmD/SD097TYjmmwzZWZtiHJD3pCGlH8QIivaP6AFshuWAybqJhfV2Ovu++IxGrYNxFeSdBGYc/xsplgZN4gmppRWDHDJDoWIrCxLfNPLQjLsS2kxmSbRMzzmL15E9vBNBOmmWyw8cXW0M+ZMZvVyGCue1rNMNdTwUbL8iNyW0Nfcw1lyTWUpe5JzIu4EVm61GbGoiyYPaKIDzUO2pYGPrwCHBwcHBwcHBwcHBwcHH+b/wDi1jN3dZ4dDQAAAABJRU5ErkJggg=="
+                }
+            });
+
+
+            bookmark.uid = Date.now().toString();
+
+
             this.bookmarks.add(bookmark);
             this._sortBookmarks();
             this._storeBookmarksInLocalStorage();
             this.deleteAllAvailable = this._checkDeleteAvailable();
-        });
+
+            console.log("Fallback-Bookmark ohne Screenshot erstellt:", name);
+        } catch (error) {
+            console.error("Fehler beim Erstellen des Fallback-Bookmarks:", error);
+        }
     },
+
+    _addLocalUserBookmark(bookmark) {
+
+        if (!bookmark.uid) {
+            bookmark.uid = Date.now().toString();
+        }
+
+
+        this.bookmarks.add(bookmark);
+
+
+        this._sortBookmarks();
+        this._storeBookmarksInLocalStorage();
+        this.deleteAllAvailable = this._checkDeleteAvailable();
+    },
+
+
+    async _create3DBookmarkWithScreenshot(name) {
+        try {
+            const view = this.view;
+            if (!view || view.type !== "3d") {
+                console.warn("No 3D view available for screenshot");
+                return;
+            }
+
+
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+
+            const screenshot = await view.takeScreenshot({
+                format: "png",
+                width: 150,
+                height: 100
+            });
+
+
+            const viewpoint = {
+                targetGeometry: view.extent,
+                scale: view.scale,
+                rotation: view.rotation || 0
+            };
+
+
+            if (view.camera) {
+                viewpoint.camera = view.camera.clone();
+            }
+
+            const uniqueName = this._checkBookmarkNameForUniqueness(name) || "Bookmark";
+
+            const bookmark = new Bookmark({
+                name: uniqueName,
+                viewpoint: viewpoint,
+                thumbnail: {
+                    url: screenshot.dataUrl
+                }
+            });
+
+            bookmark.uid = Date.now().toString();
+
+
+            this.bookmarks.add(bookmark);
+            this._sortBookmarks();
+            this._storeBookmarksInLocalStorage();
+            this.deleteAllAvailable = this._checkDeleteAvailable();
+
+        } catch (error) {
+
+            this._createFallbackBookmark(name);
+        }
+    },
+
+
+    _createFallbackBookmark(name) {
+        try {
+            const view = this.view;
+            if (!view) return;
+
+            const viewpoint = {
+                targetGeometry: view.extent,
+                scale: view.scale,
+                rotation: view.rotation || 0
+            };
+
+            if (view.camera) {
+                viewpoint.camera = view.camera.clone();
+            }
+
+            const uniqueName = this._checkBookmarkNameForUniqueness(name) || "Bookmark";
+
+
+            const bookmark = new Bookmark({
+                name: uniqueName,
+                viewpoint: viewpoint,
+                thumbnail: {
+                    url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAMAAAAL34HQAAAASFBMVEUAAAD///8JCQlFRUXs7OzBwcEuLi6enp739/eJiYlhYWHV1dW0tLR4eHhOTk7i4uI3NzfIyMioqKgaGhrY2NiSkpJycnJoaGg/C6MaAAAELklEQVR4nO1c65qjIAx1uKiIl9bL+7/pIqi1tTPDbKsS9vD92M+dbZwDIQm5BAEHBwcHBwcHBwcHBwcHBwdnCP94MX8GIiYAlAQksIeUCxghIv5R4PgCPA0JevqdHeY+YDeGEOvwKztSoVAFp8oaUBN0zqNUNXAYeDaAz1mO+ZrnnABoRCAEaz+Zr4P9X0hwjoZncKavxJUGRHhGXCMUTCgFCP/FhQiuZbUAMQCj77kyE1ob8GOzyoIvFxHZhkeC+4zSrzZWr9C8Z+JwmfnUaMjXJK+4xBFddksA8Xoq/ThxZI4sARHDrxzD33mkMdJwPQ3VbtXE+9MQrWodrFyE1gU7LHQcOTiUAshgTsTm5+LqiEjGg+OVsZYnMlXGKnUiJfVcRMWXO1gB9lgoGG2Igno3DMdazg4XogJU5a6Z+brScY20mJICJsZCb+NiQwvCCkayoxWYcjFSWnNRUqENoKPgFkRsikVofZxVqZtRcRGhe8wpVKymdQItShiRSmQmWOgCRmm2hDHlA6ZUqeP0DxiE4L6rPWCKpUFVOCJ0vI3FJQzKOg1jnSI11/Qxl5IMLpByc42DsUGGlpVg+4kArFP7j9AaWi+7T5GEuElcuD68xrAwW33XwLlSMnLtBZvQCq39qweCPxaUYWVZVs0lzLcf9TzP3YR++sw3omWLa0FKAvuvxZVlKWwlV5R/o5nQm9COBIM/T4ZoEsIvWJBUTpHgLHW5+zJJ3i+GJSlrBtvwCv+T1+k1pUzSpMfASdxsscFmA9dpO6lzL4zDiukQWUlVPEZkWBWuuvqwTRYvFzPcmgydAbXwqt5Cq5u6b0g7caVivN+AbdUqRbVgm6NBZTZvVY0G5PLf0gb9cCkUDh2qhIt1URi25us11O1oao626DI042J2t4tlGH+Lxc4YbXB7LBYqvAla36yLfU/EOfCUL+yM70Z9E3dfyzQ4yBJj4ZdHaq7+rtGqqGX5b2nmiTyxh3e93HtV5c1YX1WG8c9+srn6yL7SaSy0zzRfbWqf7bxq1XfaF7v2xqZa+mS2+rHNN3tqEbt11f8uoP0c1OOeBLRDXmEtTl1yXR0xB7zCWpy8pGhj6UZ8rQObscS9IIwZ0c0MPI5bbCl2wZiisR0aE1vcY5f68jlshxMBlm/apCnkbUFYDvqB/8VmX0EY+QmeDQmD/SD097TYjmmwzZWZtiHJD3pCGlH8QIivaP6AFshuWAybqJhfV2Ovu++IxGrYNxFeSdBGYc/xsplgZN4gmppRWDHDJDoWIrCxLfNPLQjLsS2kxmSbRMzzmL15E9vBNBOmmWyw8cXW0M+ZMZvVyGCue1rNMNdTwUbL8iNyW0Nfcw1lyTWUpe5JzIu4EVm61GbGoiyYPaKIDzUO2pYGPrwCHBwcHBwcHBwcHBwcHH+b/wDi1jN3dZ4dDQAAAABJRU5ErkJggg=="
+                }
+            });
+
+            bookmark.uid = Date.now().toString();
+
+
+            this.bookmarks.add(bookmark);
+            this._sortBookmarks();
+            this._storeBookmarksInLocalStorage();
+            this.deleteAllAvailable = this._checkDeleteAvailable();
+
+        } catch (error) {
+            console.error("Fehler beim Erstellen des Fallback-Bookmarks:", error);
+        }
+    },
+
 
     removeBookmark(id) {
         const bookmark = this.bookmarks.find((b) => id === b.uid);
@@ -97,7 +321,101 @@ export default BookmarksViewModel.createSubclass({
 
     zoomToBookmark(id) {
         const bookmark = this.bookmarks.find((b) => id === b.uid);
-        this.goTo(bookmark);
+
+        if (!bookmark) {
+            console.warn("Bookmark nicht gefunden:", id);
+            return;
+        }
+
+
+        setTimeout(() => {
+
+            const view = this.view;
+
+            if (!view) {
+                console.warn("View ist nicht verfügbar. Navigation nicht möglich.");
+                return;
+            }
+
+            reactiveUtils.whenOnce(() => view.ready)
+                .then(() => {
+
+                    if (view && !view.destroyed) {
+                        this._executeGoToBookmark(bookmark, view);
+                    } else {
+                        console.warn("View wurde während des Wartens zerstört");
+                    }
+                })
+                .catch(error => {
+                    console.error("Fehler beim Warten auf View:", error);
+                });
+        }, 300);
+    },
+
+    _executeGoToBookmark(bookmark, view) {
+
+        if (!bookmark) {
+            console.warn("Navigation nicht möglich: Ungültiges Bookmark");
+            return;
+        }
+
+        if (!view) {
+            console.warn("Navigation nicht möglich: View ist null");
+            return;
+        }
+
+        if (!view.goTo || typeof view.goTo !== "function") {
+            console.warn("Navigation nicht möglich: goTo-Methode nicht verfügbar");
+            return;
+        }
+
+        try {
+
+            const adaptedViewpoint = this._adaptViewpointToCurrentView(bookmark, view);
+            if (!adaptedViewpoint) {
+                console.warn("Konnte keinen angepassten Viewpoint erstellen");
+                return;
+            }
+
+
+
+
+
+            view.goTo(adaptedViewpoint)
+                .catch(error => {
+                    console.error("Navigation fehlgeschlagen:", error);
+                    this._tryFallbackNavigation(view, bookmark);
+                });
+        } catch (error) {
+            console.error("Fehler bei Bookmark-Navigation:", error);
+            this._tryFallbackNavigation(view, bookmark);
+        }
+    },
+
+
+    _tryFallbackNavigation(view, bookmark) {
+        try {
+
+            if (!view || !view.goTo || typeof view.goTo !== "function") {
+                console.warn("Fallback-Navigation nicht möglich: View oder goTo-Methode nicht verfügbar");
+                return;
+            }
+
+
+            if (!bookmark.viewpoint || !bookmark.viewpoint.targetGeometry) {
+                console.warn("Fallback-Navigation nicht möglich: Keine Zielgeometrie im Bookmark");
+                return;
+            }
+
+
+            view.goTo({
+                target: bookmark.viewpoint.targetGeometry
+            }).catch(e => {
+                console.error("Auch Fallback-Navigation fehlgeschlagen:", e);
+            });
+        } catch (error) {
+            console.error("Fallback-Navigation fehlgeschlagen:", error);
+        }
     },
 
     _addBookmarks() {
@@ -121,17 +439,96 @@ export default BookmarksViewModel.createSubclass({
             });
     },
 
+
+    updateViewReference(newView) {
+        console.log(" updateViewReference aufgerufen mit:", newView?.type);
+
+        if (this.view) {
+            console.log(" Alte View:", this.view.type);
+        }
+        this.view = newView;
+        if (this.view) {
+            console.log(` View-Referenz aktualisiert. Typ: ${this.view.type}`);
+        } else {
+            console.warn(" Neue View ist null oder undefiniert!");
+        }
+    },
+
+    _adaptViewpointToCurrentView(bookmark, view) {
+        if (!bookmark || !bookmark.viewpoint || !view) {
+            console.warn("Kann Viewpoint nicht anpassen: Ungültige Parameter");
+            return null;
+        }
+
+        const viewpoint = bookmark.viewpoint;
+        const is3DView = view.type === "3d";
+        const has3DCamera = viewpoint.camera && viewpoint.camera.position;
+
+
+        if (!viewpoint.targetGeometry) {
+            console.warn("Keine targetGeometry im Viewpoint vorhanden");
+
+            return viewpoint;
+        }
+
+
+        if (is3DView && !has3DCamera) {
+            return {
+                target: viewpoint.targetGeometry,
+                scale: viewpoint.scale || view.scale,
+                rotation: viewpoint.rotation || 0
+            };
+        }
+
+        if (!is3DView && has3DCamera) {
+            return {
+                target: viewpoint.targetGeometry,
+                scale: viewpoint.scale || view.scale,
+                rotation: viewpoint.rotation || 0
+            };
+        }
+
+
+        return viewpoint;
+    },
+
     _storeBookmarksInLocalStorage() {
         try {
             const userDefinedBookmarks = this.bookmarks.filter((bookmark) => !bookmark.predefined);
             const plainBookmarks = userDefinedBookmarks.map((bookmark) => {
-                const object = bookmark.toJSON();
-                delete object.extent;
-                if (object.viewpoint?.targetGeometry) {
-                    object.viewpoint.targetGeometry.type = "extent";
+
+                const object = {};
+
+
+                object.name = bookmark.name;
+
+
+                if (bookmark.viewpoint) {
+                    object.viewpoint = {
+                        scale: bookmark.viewpoint.scale,
+                        rotation: bookmark.viewpoint.rotation
+                    };
+
+                    if (bookmark.viewpoint.targetGeometry) {
+                        object.viewpoint.targetGeometry = bookmark.viewpoint.targetGeometry.toJSON();
+                        object.viewpoint.targetGeometry.type = "extent";
+                    }
+
+                    if (bookmark.viewpoint.camera) {
+                        object.viewpoint.camera = bookmark.viewpoint.camera.toJSON();
+                    }
                 }
+
+
+                if (bookmark.thumbnail) {
+                    object.thumbnail = {
+                        url: bookmark.thumbnail.url
+                    };
+                }
+
                 return object;
             });
+
             const bookmarksString = JSON.stringify(plainBookmarks);
             this._localStorage.setItem(this.localStorageKey, bookmarksString);
         } catch (exception) {
@@ -165,12 +562,25 @@ export default BookmarksViewModel.createSubclass({
     },
 
     _checkBookmarkNameForUniqueness(name) {
-        const existingBookmarks = this.bookmarksArray;
+
+        if (!name || typeof name !== 'string') {
+            console.warn("Ungültiger Bookmark-Name übergeben:", name);
+            return "Bookmark";
+        }
+
+        const existingBookmarks = this.bookmarksArray || [];
 
         let matchCounter = 0;
         existingBookmarks.forEach(bookmark => {
-            if (bookmark.name === name || bookmark.name.split("_")[0] === name.split("_")[0]) {
-                matchCounter++;
+
+            if (bookmark && bookmark.name) {
+
+                const bookmarkBaseName = bookmark.name.split("_")[0] || bookmark.name;
+                const nameBaseName = name.split("_")[0] || name;
+
+                if (bookmark.name === name || bookmarkBaseName === nameBaseName) {
+                    matchCounter++;
+                }
             }
         });
 

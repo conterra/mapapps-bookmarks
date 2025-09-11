@@ -25,8 +25,9 @@ export default class BookmarksWidgetFactory {
 
     createInstance() {
         const bookmarksModel = this._getBookmarksModel();
+        this._setupViewMonitoring(bookmarksModel);
         const vm = new Vue(BookmarksWidget);
-        const widget = VueDijit(vm, {class: "fullHeight"});
+        const widget = VueDijit(vm, { class: "fullHeight" });
 
         vm.i18n = this._i18n.get().ui;
 
@@ -54,6 +55,38 @@ export default class BookmarksWidgetFactory {
 
         return widget;
     }
+    _setupViewMonitoring(bookmarksModel) {
+
+
+
+        const mapWidgetModel = this._mapWidgetModel;
+
+        if (!mapWidgetModel) {
+            console.error("MapWidgetModel nicht gefunden!");
+            return;
+        }
+
+
+        const initialView = mapWidgetModel.view;
+        if (initialView) {
+
+            bookmarksModel.updateViewReference(initialView);
+        } else {
+            console.warn("Keine initiale View vorhanden!");
+        }
+
+
+        mapWidgetModel.watch("view", function (newViewObj) {
+
+            const newView = newViewObj.value;
+
+            if (newView) {
+                bookmarksModel.updateViewReference(newView);
+            } else {
+                console.warn("Neue View ist null!");
+            }
+        });
+    }
 
     deactivate() {
         this[_binding].unbind();
@@ -74,7 +107,7 @@ export default class BookmarksWidgetFactory {
             if (mapWidgetModel.view) {
                 resolve(mapWidgetModel.view);
             } else {
-                mapWidgetModel.watch("view", ({value: view}) => {
+                mapWidgetModel.watch("view", ({ value: view }) => {
                     resolve(view);
                 });
             }
