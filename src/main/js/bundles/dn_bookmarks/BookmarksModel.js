@@ -65,20 +65,17 @@ export default BookmarksViewModel.createSubclass({
 
     addBookmark(name) {
         if (!name || typeof name !== "string") {
-            console.warn("Bookmark name is not valid");
             return;
         }
 
         const view = this.view;
         if (!view) {
-            console.warn("No view available to create bookmark");
             return;
         }
 
 
         const uniqueName = this._checkBookmarkNameForUniqueness(name);
         if (!uniqueName) {
-            console.warn("Konnte keinen eindeutigen Namen erstellen");
             return;
         }
 
@@ -99,20 +96,17 @@ export default BookmarksViewModel.createSubclass({
                             this._create2DBookmark(uniqueName);
                         }
                     } catch (error) {
-                        console.error("Fehler beim Erstellen des Lesezeichens:", error);
 
                         this._createFallbackBookmark(uniqueName);
                     }
                 }, 200);
             })
             .catch(error => {
-                console.error("Fehler beim Warten auf View-Bereitschaft:", error);
 
                 this._createFallbackBookmark(uniqueName);
             });
     },
 
-    // Neue Methode für 2D-Bookmarks
     _create2DBookmark(name) {
         try {
             const view = this.view;
@@ -148,11 +142,9 @@ export default BookmarksViewModel.createSubclass({
 
 
             }).catch(error => {
-                console.error("Fehler beim Erstellen des Screenshots:", error);
                 this._createBookmarkWithoutScreenshot(name, viewpoint);
             });
         } catch (error) {
-            console.error("Fehler beim Erstellen des 2D-Bookmarks:", error);
             this._createFallbackBookmark(name);
         }
     },
@@ -178,9 +170,9 @@ export default BookmarksViewModel.createSubclass({
             this._storeBookmarksInLocalStorage();
             this.deleteAllAvailable = this._checkDeleteAvailable();
 
-            console.log("Fallback-Bookmark ohne Screenshot erstellt:", name);
+
         } catch (error) {
-            console.error("Fehler beim Erstellen des Fallback-Bookmarks:", error);
+            // Error-Handling
         }
     },
 
@@ -204,7 +196,6 @@ export default BookmarksViewModel.createSubclass({
         try {
             const view = this.view;
             if (!view || view.type !== "3d") {
-                console.warn("No 3D view available for screenshot");
                 return;
             }
 
@@ -290,7 +281,7 @@ export default BookmarksViewModel.createSubclass({
             this.deleteAllAvailable = this._checkDeleteAvailable();
 
         } catch (error) {
-            console.error("Fehler beim Erstellen des Fallback-Bookmarks:", error);
+            //error handling
         }
     },
 
@@ -323,7 +314,6 @@ export default BookmarksViewModel.createSubclass({
         const bookmark = this.bookmarks.find((b) => id === b.uid);
 
         if (!bookmark) {
-            console.warn("Bookmark nicht gefunden:", id);
             return;
         }
 
@@ -333,7 +323,6 @@ export default BookmarksViewModel.createSubclass({
             const view = this.view;
 
             if (!view) {
-                console.warn("View ist nicht verfügbar. Navigation nicht möglich.");
                 return;
             }
 
@@ -343,11 +332,11 @@ export default BookmarksViewModel.createSubclass({
                     if (view && !view.destroyed) {
                         this._executeGoToBookmark(bookmark, view);
                     } else {
-                        console.warn("View wurde während des Wartens zerstört");
+                        //warn
                     }
                 })
                 .catch(error => {
-                    console.error("Fehler beim Warten auf View:", error);
+                    //error
                 });
         }, 300);
     },
@@ -355,17 +344,14 @@ export default BookmarksViewModel.createSubclass({
     _executeGoToBookmark(bookmark, view) {
 
         if (!bookmark) {
-            console.warn("Navigation nicht möglich: Ungültiges Bookmark");
             return;
         }
 
         if (!view) {
-            console.warn("Navigation nicht möglich: View ist null");
             return;
         }
 
         if (!view.goTo || typeof view.goTo !== "function") {
-            console.warn("Navigation nicht möglich: goTo-Methode nicht verfügbar");
             return;
         }
 
@@ -373,7 +359,6 @@ export default BookmarksViewModel.createSubclass({
 
             const adaptedViewpoint = this._adaptViewpointToCurrentView(bookmark, view);
             if (!adaptedViewpoint) {
-                console.warn("Konnte keinen angepassten Viewpoint erstellen");
                 return;
             }
 
@@ -383,11 +368,9 @@ export default BookmarksViewModel.createSubclass({
 
             view.goTo(adaptedViewpoint)
                 .catch(error => {
-                    console.error("Navigation fehlgeschlagen:", error);
                     this._tryFallbackNavigation(view, bookmark);
                 });
         } catch (error) {
-            console.error("Fehler bei Bookmark-Navigation:", error);
             this._tryFallbackNavigation(view, bookmark);
         }
     },
@@ -397,13 +380,11 @@ export default BookmarksViewModel.createSubclass({
         try {
 
             if (!view || !view.goTo || typeof view.goTo !== "function") {
-                console.warn("Fallback-Navigation nicht möglich: View oder goTo-Methode nicht verfügbar");
                 return;
             }
 
 
             if (!bookmark.viewpoint || !bookmark.viewpoint.targetGeometry) {
-                console.warn("Fallback-Navigation nicht möglich: Keine Zielgeometrie im Bookmark");
                 return;
             }
 
@@ -411,10 +392,9 @@ export default BookmarksViewModel.createSubclass({
             view.goTo({
                 target: bookmark.viewpoint.targetGeometry
             }).catch(e => {
-                console.error("Auch Fallback-Navigation fehlgeschlagen:", e);
             });
         } catch (error) {
-            console.error("Fallback-Navigation fehlgeschlagen:", error);
+            // Fehlerbehandlung
         }
     },
 
@@ -426,7 +406,7 @@ export default BookmarksViewModel.createSubclass({
             this.bookmarks.push(...predefinedBookmarks);
             this._sortBookmarks();
         } catch (exception) {
-            console.error(exception);
+            //Fehlerbehandlung
         }
     },
 
@@ -441,22 +421,20 @@ export default BookmarksViewModel.createSubclass({
 
 
     updateViewReference(newView) {
-        console.log(" updateViewReference aufgerufen mit:", newView?.type);
 
         if (this.view) {
-            console.log(" Alte View:", this.view.type);
+            //ok
         }
         this.view = newView;
         if (this.view) {
-            console.log(` View-Referenz aktualisiert. Typ: ${this.view.type}`);
+            //ok
         } else {
-            console.warn(" Neue View ist null oder undefiniert!");
+            //warn
         }
     },
 
     _adaptViewpointToCurrentView(bookmark, view) {
         if (!bookmark || !bookmark.viewpoint || !view) {
-            console.warn("Kann Viewpoint nicht anpassen: Ungültige Parameter");
             return null;
         }
 
@@ -466,8 +444,6 @@ export default BookmarksViewModel.createSubclass({
 
 
         if (!viewpoint.targetGeometry) {
-            console.warn("Keine targetGeometry im Viewpoint vorhanden");
-
             return viewpoint;
         }
 
@@ -532,7 +508,7 @@ export default BookmarksViewModel.createSubclass({
             const bookmarksString = JSON.stringify(plainBookmarks);
             this._localStorage.setItem(this.localStorageKey, bookmarksString);
         } catch (exception) {
-            console.error(exception);
+            //Fehlerbehandlung
         }
     },
 
@@ -564,7 +540,6 @@ export default BookmarksViewModel.createSubclass({
     _checkBookmarkNameForUniqueness(name) {
 
         if (!name || typeof name !== 'string') {
-            console.warn("Ungültiger Bookmark-Name übergeben:", name);
             return "Bookmark";
         }
 
