@@ -20,13 +20,15 @@ import Binding from "apprt-binding/Binding";
 import BookmarksModel from "./BookmarksModel";
 
 const _binding = Symbol("_binding");
+const _mapBinding = Symbol("_mapBinding");
 
 export default class BookmarksWidgetFactory {
 
     createInstance() {
-        const bookmarksModel = this._getBookmarksModel();
+        const bookmarksModel = new BookmarksModel(this._properties);
+        const mapWidgetModel = this._mapWidgetModel;
         const vm = new Vue(BookmarksWidget);
-        const widget = VueDijit(vm, {class: "fullHeight"});
+        const widget = VueDijit(vm, { class: "fullHeight" });
 
         vm.i18n = this._i18n.get().ui;
 
@@ -52,32 +54,19 @@ export default class BookmarksWidgetFactory {
             .enable()
             .syncToLeftNow();
 
+        this[_mapBinding] = Binding.for(bookmarksModel, mapWidgetModel)
+            .syncToLeft("view")
+            .enable()
+            .syncToLeftNow();
+
         return widget;
     }
 
     deactivate() {
         this[_binding].unbind();
+        this[_mapBinding].unbind();
         this[_binding] = undefined;
+        this[_mapBinding] = undefined;
     }
 
-    _getBookmarksModel() {
-        const bookmarksModel = new BookmarksModel(this._properties);
-        this._getView().then((view) => {
-            bookmarksModel.view = view;
-        });
-        return bookmarksModel;
-    }
-
-    _getView() {
-        const mapWidgetModel = this._mapWidgetModel;
-        return new Promise((resolve) => {
-            if (mapWidgetModel.view) {
-                resolve(mapWidgetModel.view);
-            } else {
-                mapWidgetModel.watch("view", ({value: view}) => {
-                    resolve(view);
-                });
-            }
-        });
-    }
 }
