@@ -1,5 +1,5 @@
 {
-     "properties": {
+    "properties": {
         "title": "${apptitle}"
     },
     "load": {
@@ -35,7 +35,8 @@
             "toc",
             "toolset",
             "dn_imprintprivacy",
-            "dn_bookmarks"
+            "dn_bookmarks",
+            "viewmodeswitcher"
         ],
         "i18n": [
             "bundle"
@@ -175,7 +176,21 @@
                     }
                 ],
                 "map": {
+                    "ground": [
+                        {
+                            "id": "Terrain_1",
+                            "url": "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
+                            "type": "AGS_ELEVATION",
+                            "title": "World Elevation 3D"
+                        }
+                    ],
                     "layers": [
+                        {
+                            "id": "Scene_1",
+                            "url": "https://tiles.arcgis.com/tiles/jUpNdisbWqRpMo35/arcgis/rest/services/K%C3%B6ln17/SceneServer",
+                            "type": "AGS_SCENE",
+                            "title": "3D Gebaude Koeln"
+                        },
                         {
                             "id": "koeln1",
                             "title": "${map.koeln1.title}",
