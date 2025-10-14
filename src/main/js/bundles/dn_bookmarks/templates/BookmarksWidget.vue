@@ -75,16 +75,20 @@
                         class="pr-1"
                         shrink
                     >
-                        <v-btn
-                            class="my-0"
-                            color="error"
-                            block
-                            outline
-                            :disabled="!deleteAllAvailable"
-                            @click="removeAllBookmarks=true"
-                        >
-                            <v-icon>delete</v-icon>
-                        </v-btn>
+                        <v-tooltip bottom>
+                            <v-btn
+                                slot="activator"
+                                class="my-0"
+                                color="error"
+                                block
+                                outline
+                                :disabled="!deleteAllAvailable"
+                                @click="removeAllBookmarks=true"
+                            >
+                                <v-icon>delete</v-icon>
+                            </v-btn>
+                            <span> {{ i18n.clearAllBookmarks }}</span>
+                        </v-tooltip>
                     </v-flex>
                     <v-flex
                         class="pl-1"
