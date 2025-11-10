@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Bookmark from "esri/webmap/Bookmark";
-import BookmarksViewModel from "esri/widgets/Bookmarks/BookmarksViewModel";
-import Collection from "esri/core/Collection";
+import Bookmark from "@arcgis/core/webmap/Bookmark";
+import BookmarksViewModel from "@arcgis/core/widgets/Bookmarks/BookmarksViewModel";
+import Collection from "@arcgis/core/core/Collection";
 
 export default BookmarksViewModel.createSubclass({
     _localStorage: window.localStorage,
